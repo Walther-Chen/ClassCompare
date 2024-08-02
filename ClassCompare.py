@@ -35,22 +35,37 @@ for i in astor:
             
 #ChineseYi
 wb = openpyxl.Workbook()
-wb.create_sheet('中乙',0)
+wb.create_sheet("中乙",0) 
 s1= wb['中乙']
-count=2
-s1.cell(1,1).value='日期'
-s1.cell(1,2).value='星期'
-s1.cell(1,3).value='上/下午'
-s1.cell(1,4).value='時間'
-s1.cell(1,5).value='老師'
+
+#處理所有在週一的課
+d=dict()
+Yidate=task.ChineseYiDate()
+for y in Yidate:
+    d[y]=[]
+
 for j in astor:
     if j[1]=='一)'and j[2]=='P':
         if j[3]=='3-4' or j[3]=='4-5' or j[3]=='3-5':
-            s1.cell(count,1).value=j[0]
-            s1.cell(count,2).value=j[1]
-            s1.cell(count,3).value=j[2]
-            s1.cell(count,4).value=j[3]
-            s1.cell(count,5).value=j[4]
-            count=count+1
+            d[j[0]].append((j[3],j[4],'四'))
+for k in bstor:
+    if k[1]=='一)'and k[2]=='P':
+        if k[3]=='3-4' or k[3]=='4-5' or k[3]=='3-5':
+            d[j[0]].append((k[3],k[4],'三'))
 
+#匯出結果
+s1.cell(1,1).value='日期'
+s1.cell(1,2).value='(時間,老師,年級)'
+ini=2
+for write_class in d.items():
+    s1.cell(ini,1).value=write_class[0]
+    s1.cell(ini,2).value=str(write_class[1])
+    ini=ini+1
 wb.save('chineseyi.xlsx')
+
+
+
+
+
+
+
