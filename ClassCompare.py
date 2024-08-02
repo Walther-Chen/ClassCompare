@@ -33,5 +33,24 @@ for i in astor:
         if None not in i:
             print(i)
             
+#ChineseYi
+wb = openpyxl.Workbook()
+wb.create_sheet('中乙',0)
+s1= wb['中乙']
+count=2
+s1.cell(1,1).value='日期'
+s1.cell(1,2).value='星期'
+s1.cell(1,3).value='上/下午'
+s1.cell(1,4).value='時間'
+s1.cell(1,5).value='老師'
+for j in astor:
+    if j[1]=='一)'and j[2]=='P':
+        if j[3]=='3-4' or j[3]=='4-5' or j[3]=='3-5':
+            s1.cell(count,1).value=j[0]
+            s1.cell(count,2).value=j[1]
+            s1.cell(count,3).value=j[2]
+            s1.cell(count,4).value=j[3]
+            s1.cell(count,5).value=j[4]
+            count=count+1
 
-       
+wb.save('chineseyi.xlsx')

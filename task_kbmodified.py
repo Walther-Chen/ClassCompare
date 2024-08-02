@@ -80,5 +80,5 @@ def teachers (class_list):
         
     return final_output
 
-def ChineseYi (class_sort):
-    print(1)
+
+    
