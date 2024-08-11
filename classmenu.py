@@ -1,7 +1,14 @@
+"""
+    classmenu.py
+    排課程式的CLI介面
+    KB 2024/08/11 @ CMU
+"""
+
 import classutility as util # Import the utility module
 import json # Import the json module
 import classtask as task # Import the task module
 import classcompare as comp # Import the compare module
+import openpyxl
 
 def teacher_menu (filename):
     """
@@ -16,12 +23,20 @@ def teacher_menu (filename):
             print(f"{index}. {teacher}")
         choice = input("請選擇你要排課的老師: ")
         #list the classes of the selected teacher, and display them with index numbers
-        selected_teacher = teacher_list[int(choice) - 1]
+        try:
+            selected_teacher = teacher_list[int(choice) - 1]
+        except IndexError:
+            print("Invalid choice. Please try again.")
+            continue
         print(f"Classes for {selected_teacher}:")
         for index, subject in enumerate(loaded_teachers[selected_teacher], start=1):
             print(f"{index}. {subject}")
         choice = input("請選擇你要排課的科目: ")
-        selected_subject = loaded_teachers[selected_teacher][int(choice) - 1]
+        try: 
+            selected_subject = loaded_teachers[selected_teacher][int(choice) - 1]
+        except IndexError:
+            print("Invalid choice. Please try again.")
+            continue
         # Display the selected teacher and subject
         print(f"授課教師: {selected_teacher}")
         print(f"授課內容: {selected_subject}")
@@ -30,67 +45,34 @@ def teacher_menu (filename):
         if choice.lower() != '0':
             return selected_subject, selected_teacher
         
-def main_menu():
-    print("Welcome to the Chineseyi Class Arrangement Program!")
-    print("Please select an option:")
-    print("1. Level 1 Classes")
-    print("2. Level 2 Classes")
-    print("3. Exit")
+def main_menu(classchart):
+    print("中乙排課系統")
+    print("目前課表：")
+    util.print_chungyi(classchart)
+    choice = input("請用序號選擇你要排哪一堂課，輸入q離開並存檔")
 
-    choice = input("Enter your choice: ")
-
-    if choice == "1":
-        level1_menu()
-    elif choice == "2":
-        level2_menu()
-    elif choice == "3":
+    if choice == "q":
         print("Exiting the program...")
-    else:
-        print("Invalid choice. Please try again.")
-        main_menu()
+        # Save the classchart to a excel file, do not use content manager
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        for row in classchart:
+            ws.append(row)
+        wb.save("classchart.xlsx")
+        print("課表已經存到 classchart.xlsx")
+        return
 
-def level1_menu():
-    print("Level 1 Classes:")
-    print("1. Beginner Class")
-    print("2. Intermediate Class")
-    print("3. Advanced Class")
-    print("4. Go back to main menu")
+    elif choice.isdigit():
+        choice = int(choice)
+        if choice > 0 and choice < len(classchart):            
+            classchart[choice][2], classchart[choice][3] = teacher_menu("teachers.json")            
+            main_menu(classchart)
+        else:
+            print("Invalid choice. Please try again.")
+            main_menu(classchart)
 
-    choice = input("Enter your choice: ")
-
-    if choice == "1":
-        arrange_class("Beginner Class")
-    elif choice == "2":
-        arrange_class("Intermediate Class")
-    elif choice == "3":
-        arrange_class("Advanced Class")
-    elif choice == "4":
-        main_menu()
-    else:
-        print("Invalid choice. Please try again.")
-        level1_menu()
-
-def level2_menu():
-    print("Level 2 Classes:")
-    print("1. Conversational Class")
-    print("2. Business Class")
-    print("3. Go back to main menu")
-
-    choice = input("Enter your choice: ")
-
-    if choice == "1":
-        arrange_class("Conversational Class")
-    elif choice == "2":
-        arrange_class("Business Class")
-    elif choice == "3":
-        main_menu()
-    else:
-        print("Invalid choice. Please try again.")
-        level2_menu()
-
-def arrange_class(class_name):
-    print(f"Arranging class for {class_name}...")
 
 # Start the program
-#teacher_menu("teachers.json")
-print(comp.yidict("a.xlsx", "b.xlsx"))
+classchart = comp.yilist_generation("a.xlsx", "b.xlsx")
+main_menu(classchart)
+
