@@ -34,7 +34,7 @@ def print_separator(column_widths):
 
 # Example usage
 data = [
-    ["授課時間", "授課老師", "主題", "備註"],
+    [u"授課時間", u"授課老師", u"主題", u"備註"],
     ["2021-09-01", "John Doe", "Python Basics", "與醫學系上課時間重疊"],
     ["2021-09-08", "John Doe", "Python Functions", "假日"],
     ["2021-09-15", "John Doe", "Python Modules", "第三堂課"]
