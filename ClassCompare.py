@@ -7,10 +7,36 @@ Created on Tue Jul 30 19:10:21 2024
 
 import openpyxl
 import os
-import task_kbmodified as task
+import classtask as task
 
-data= r'C:\\Users\\Tristan\\OneDrive\\桌面\\code\\Python\\ClassCompare'
-os.chdir(data)
+
+def yidict (medthree, medfour):
+    """
+    medthree與medfour為醫三與醫四課表的檔案名稱
+    """
+    afile= openpyxl.load_workbook(medthree)
+    asheet=afile.worksheets[0]
+    astor=task.task(asheet)
+    bfile=openpyxl.load_workbook(medfour)
+    bsheet=bfile.worksheets[0]
+    bstor=task.task(bsheet)
+    astor=task.teachers(astor)
+    bstor=task.teachers(bstor)    
+    d=dict()
+    Yidate=task.ChineseYiDate()
+    for y in Yidate:
+        d[y]=[]
+    for j in astor:
+        if j[1]=='一)'and j[2]=='P':
+            if j[3]=='3-4' or j[3]=='4-5' or j[3]=='3-5':
+                d[j[0]].append((j[3],j[4],'四'))
+    for k in bstor:
+        if k[1]=='一)'and k[2]=='P':
+            if k[3]=='3-4' or k[3]=='4-5' or k[3]=='3-5':
+                d[j[0]].append((k[3],k[4],'三'))
+    return d
+#data= r'C:\\Users\\Tristan\\OneDrive\\桌面\\code\\Python\\ClassCompare'
+#os.chdir(data)
 afile= openpyxl.load_workbook('a.xlsx')
 asheet=afile.worksheets[0]
 astor=task.task(asheet)
@@ -52,7 +78,7 @@ for k in bstor:
     if k[1]=='一)'and k[2]=='P':
         if k[3]=='3-4' or k[3]=='4-5' or k[3]=='3-5':
             d[j[0]].append((k[3],k[4],'三'))
-
+print(d)
 #匯出結果
 s1.cell(1,1).value='日期'
 s1.cell(1,2).value='(時間,老師,年級)'

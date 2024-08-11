@@ -1,0 +1,11 @@
+{
+    "John Doe": [
+        "Python Basics",
+        "Python Functions",
+        "Python Modules"
+    ],
+    "Jane Smith": [
+        "Web Development",
+        "Database Management"
+    ]
+}
