@@ -100,5 +100,23 @@ def ChineseYiDate():
         
     return sorted_date
 
+def denDate():
+    import datetime
+    all_date=[]
+    sorted_date=[]
+    #注意：民國紀年的問題沒有解決，下學期可能碰到閏年，但上學期沒差
+    days= datetime.date(113,9,9)
+    last_day= datetime.date(114,1,6)
+    while last_day - days >=datetime.timedelta(days=0):
+        all_date.append(days)
+        days=days + datetime.timedelta(weeks=1)
+        
+    for raw_date in all_date:
+        part_date=raw_date.isoformat().split('-',3)
+        part_year=part_date[0][1:]
+        sorted_date.append(f'{part_year}/{part_date[1]}/{part_date[2]}')
+        
+    return sorted_date
+
 
     

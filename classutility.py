@@ -5,7 +5,8 @@
 """
 import json # 載入 json 模組
 import classtask as task # 載入 class_task 模組
-import classcompare as comp # 載入 class_compare 模組
+import ClassCompare as comp # 載入 class_compare 模組
+import os
 
 def print_chungyi(data):
     """
@@ -73,11 +74,14 @@ def load_teachers(filename):
     """
         load teachers and their classes from a JSON file
     """
+    r=os.path.dirname(__file__)
+    os.chdir(r) #reduce the possibility of FileNotFoundError
     try:
         with open(filename, 'r', encoding='utf-8') as file:
             teachers = json.load(file)
             return teachers
     except FileNotFoundError:
+        print('FileNotFoundError')
         return {}
     except json.JSONDecodeError:
         return {}
