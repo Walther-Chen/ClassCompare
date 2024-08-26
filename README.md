@@ -39,7 +39,7 @@ git clone https://github.com/kblab2024/ClassCompare.git
 
 ## 貢獻
 
-- [WalterChen](https://github.com/WalterChen)
+- [WaltherChen](https://github.com/WalterChen)
 - [kblab2024](https://github.com/kblab2024)
 
 ## 許可證
