@@ -9,6 +9,7 @@ import json # Import the json module
 import classtask as task # Import the task module
 import ClassCompare as comp # Import the compare module
 import openpyxl
+import os
 
 def teacher_menu (filename):
     """
@@ -73,6 +74,8 @@ def main_menu(classchart):
 
 
 # Start the program
+r=os.path.dirname(__file__)
+os.chdir(r)
 classchart = comp.yilist_generation("a.xlsx", "b.xlsx")
 #print(classchart)
 main_menu(classchart)

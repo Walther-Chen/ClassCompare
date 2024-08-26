@@ -121,5 +121,8 @@ def main_menu(classchart):
 
 
 # Start the program
+r=os.path.dirname(__file__)
+print(os.listdir(r))
+os.chdir(r)
 classchart = denlist_generation("a.xlsx", "b.xlsx")
 main_menu(classchart)

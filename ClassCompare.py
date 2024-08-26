@@ -55,8 +55,8 @@ def yilist_generation (medthree, medfour):
         li.append([k, "3-5", "", "", ";".join(medclassess), ""])
     return li
             
-data= r'C:\\Users\\Tristan\\OneDrive\\桌面\\code\\Python\\ClassCompare'
-os.chdir(data)
+r=os.path.dirname(__file__)
+os.chdir(r)
 afile= openpyxl.load_workbook('a.xlsx')
 asheet=afile.worksheets[0]
 astor=task.task(asheet)
