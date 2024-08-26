@@ -13,7 +13,7 @@
 
 ## 簡介
 
-`ClassCompare`是一個衝堂處理與排課的Python程式，可以讓您比較課程。`classmenu.py`為主要模組，目前可以進行中乙排課。`classcompare.py`單獨運行時可以輸出中乙與醫學系同時上課的日期。
+`ClassCompare`是一個衝堂處理與排課的Python程式，可以讓您比較課程。`classmenu.py`為主要模組，目前可以進行中乙排課。`classcompare.py`單獨運行時可以輸出中乙與醫學系同時上課的日期(若欲運行此功能需將第102行程式碼從註解形式改回程式形式)。而運行`DenMain.py`模組時可進行牙醫排課。
 
 ## 安裝
 
