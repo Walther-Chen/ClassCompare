@@ -5,6 +5,11 @@ Created on Tue Jul 30 21:35:52 2024
 @author: Tristan
 """
 
+import datetime
+import holidays
+import requests
+import pdfplumber
+import re
 
 def strip_by_chinese_comma(astring):
     """
@@ -83,7 +88,7 @@ def teachers (class_list):
     return final_output
 
 def ChineseYiDate():
-    import datetime
+    
     all_date=[]
     sorted_date=[]
     days= datetime.date(2024,9,9)
@@ -118,5 +123,102 @@ def denDate():
         
     return sorted_date
 
+def generate_course_dates_with_holidays(start_date: datetime.date, weekday: int, year: int) -> list:
+    """
+    生成十八周的課程日期列表，並注記與台灣國定假日重疊的日期。
 
+    :param start_date: 開學日期，格式為 datetime.date。
+    :param weekday: 上課的星期幾 (0 = 週一, 1 = 週二, ..., 6 = 週日)。
+    :param year: 課程年份，用來查詢國定假日。
+    :return: 包含十八個課程日期的列表，每個元素為 (datetime.date, 假日名稱) 或 (datetime.date, None)。
+    """
+    course_dates = []
+    print(year)
+    taiwan_holidays = holidays.TW(years=year)
     
+    # 計算第一周的第一個上課日
+    first_class_date = start_date + datetime.timedelta(days=(weekday - start_date.weekday() + 7) % 7)
+    
+    # 生成十八周的課程日期, 並查詢是否為國定假日
+    for week in range(18):
+        course_date = first_class_date + datetime.timedelta(weeks=week)
+        holiday_name = taiwan_holidays.get(course_date)
+        course_dates.append((course_date, holiday_name))
+    
+    return course_dates
+
+def get_academic_year_and_semester(input_date = datetime.date.today()):    
+    """
+        計算現在或是特定日期是哪一個學年度與哪一個學期。
+    """
+    year = input_date.year
+    month = input_date.month
+    
+    # 計算學年度
+    if month >= 8:
+        academic_year = year - 1911
+        semester = 1
+    else:
+        academic_year = year - 1911 - 1
+        semester = 2
+    
+    return academic_year, semester
+
+def fetch_pdf_content(academic_year):
+    """
+        下載指定學年度的中國醫藥大學校務行事曆 PDF 檔案，並讀取其內容。
+    """
+    # 替換網址中的學年度部分
+    url = f"https://president.cmu.edu.tw/doc/schedule/{academic_year}Schedule.pdf"
+    
+    # 發送 HTTP 請求來下載 PDF
+    response = requests.get(url)
+    
+    # 確認請求成功
+    if response.status_code == 200:
+        # 打開 PDF 並讀取內容
+        with open('schedule.pdf', 'wb') as file:
+            file.write(response.content)
+        
+        # 使用 pdfplumber 讀取 PDF 文件內容
+        with pdfplumber.open('schedule.pdf') as pdf:
+            text = ''
+            for page in pdf.pages:
+                text += page.extract_text()
+        
+        return text
+    else:
+        return f"Failed to retrieve the PDF. Status code: {response.status_code}"
+# 使用範例
+  
+def semester_start_date(input_date = datetime.date.today()):
+    """
+        取得指定日期的學年度、學期，並找出開學日。
+    """
+    academic_year, semester = get_academic_year_and_semester(input_date)
+    current_year = input_date.year
+    pdf_content = fetch_pdf_content(academic_year)
+    if semester == 1:
+        pattern = r"九\n月([\s\S]+?)十\n月"
+        start_month = 9
+        match = re.search(pattern, pdf_content)
+        if match:
+            print(match.group(0))
+    else:
+        pattern = r"二\n月([\s\S]+?)三\n月"
+        start_month = 2
+        match = re.search(pattern, pdf_content)
+        if match:
+            print(match.group(0))
+    start_date = None
+    for line in match.group(0).split('\n'):
+        if '開學日' in line:
+            print(line)
+            if line[0].isdigit():
+                start_date = datetime.date(current_year, start_month, int(line.split("日")[0]))
+            elif line.split("日")[0][-1].isdigit():
+                start_date = datetime.date(current_year, start_month, int(line.split("日")[0].split(" ")[-1]))
+            else:
+                raise ValueError("找不到開學日")
+            break
+    return academic_year, semester, start_date
