@@ -24,9 +24,6 @@
 - pdfplumber
 
 請確保您已經安裝了這些依賴項，以便順利使用`ClassCompare`程式。
-```
-
-Replace `$MODULES$` with the list of import modules in the directory. Make sure to format the list as a bullet point list.
 
 ## 簡介
 
