@@ -134,7 +134,7 @@ def generate_course_dates_with_holidays(start_date: datetime.date, weekday: int,
     """
     course_dates = []
     print(year)
-    taiwan_holidays = holidays.TW(years=year)
+    taiwan_holidays = holidays.TW(years=year)+holidays.TW(years=year+1)
     
     # 計算第一周的第一個上課日
     first_class_date = start_date + datetime.timedelta(days=(weekday - start_date.weekday() + 7) % 7)
@@ -203,17 +203,17 @@ def semester_start_date(input_date = datetime.date.today()):
         start_month = 9
         match = re.search(pattern, pdf_content)
         if match:
-            print(match.group(0))
+            pass
     else:
         pattern = r"二\n月([\s\S]+?)三\n月"
         start_month = 2
         match = re.search(pattern, pdf_content)
         if match:
-            print(match.group(0))
+            pass
     start_date = None
     for line in match.group(0).split('\n'):
         if '開學日' in line:
-            print(line)
+            #print(line)
             if line[0].isdigit():
                 start_date = datetime.date(current_year, start_month, int(line.split("日")[0]))
             elif line.split("日")[0][-1].isdigit():
