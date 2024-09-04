@@ -117,25 +117,33 @@ def teacher_menu (filename):
         if choice.lower() != '0':
             return selected_subject, selected_teacher
         
-def main_menu(classchart = None, weekday = None, start_time = None):
+def main_menu(classchart = None, weekday = None, start_time = None, classname = None):
+    print(weekday, start_time, classname)
     current_year, sementer, start_date = task.semester_start_date()
     print("中國醫藥大學排課系統，目前時間為", current_year, "學年度", sementer, "學期", "開學日期", start_date)
     if classchart is None:
         print("請選擇你要排課的系所：")
         # Display the list of departments read from classlist.json
-        with open("classlist.json", 'r', encoding="utf-8") as json_file:
-            class_dict = json.load(json_file)
-        # Transform class_dict into a list of departments with index numbers
-        li = []
-        for index, department in enumerate(class_dict, start=1):
-            li.append([index, department])
-        print(li)
-
-            
+        with open("courselist.json", 'r', encoding="utf-8") as json_file:
+            course_list = json.load(json_file)
+        for department in course_list:                                    
+            print(f"{course_list.index(department)+1}. {department[util.CLASSNAME]} (星期{chinese_weekday[department[util.WEEKDAY]][0]} {department[util.STARTTIME]}:00開始)")
+        choice = input("請用序號選擇你要排哪一個系所，輸入q離開: ")
+        if choice == "q":
+            print("Exiting the program...")
+            exit()
+        elif choice.isdigit():
+            choice = int(choice)
+            if choice > 0 and choice <= len(course_list):
+                classchart = classlist_generation("a.xlsx", "b.xlsx", course_list[choice-1][util.WEEKDAY], course_list[choice-1][util.STARTTIME])
+                main_menu(classchart, course_list[choice-1][util.WEEKDAY], course_list[choice-1][util.STARTTIME], course_list[choice-1][util.CLASSNAME])
+            else:
+                print("Invalid choice. Please try again.")
+                main_menu()            
 
     util.print_chungyi(classchart)
-    choice = input("請用序號選擇你要排哪一堂課，輸入q離開並存檔")
-
+    choice = input("請用序號選擇你要排哪一堂課，輸入q離開並存檔: ")
+    outputfilename = f"{current_year}學年度{sementer}學期{classname}課表.xlsx"
     if choice == "q":
         print("Exiting the program...")
         # Save the classchart to a excel file, do not use content manager
@@ -143,25 +151,24 @@ def main_menu(classchart = None, weekday = None, start_time = None):
         ws = wb.active
         for row in classchart:
             ws.append(row)
-        wb.save("d_classchart.xlsx")
-        print("課表已經存到 d_classchart.xlsx")
-        return
+        wb.save(outputfilename)
+        print("課表已經存到", outputfilename)
+        exit()
 
     elif choice.isdigit():
         choice = int(choice)
         if choice > 0 and choice < len(classchart):            
             classchart[choice][3], classchart[choice][2] = teacher_menu("teachers.json")            
-            main_menu(classchart)
+            main_menu(classchart, weekday, start_time, classname)
         else:
             print("Invalid choice. Please try again.")
-            main_menu(classchart)
+            main_menu(classchart, weekday, start_time, classname)
 
 
 # Start the program
 r=os.path.dirname(__file__)
 os.chdir(r)
 #print(class_dict("a.xlsx", "b.xlsx", 1, 13))
-
-classchart = classlist_generation("a.xlsx", "b.xlsx", 1, 13)
-print(classchart)
+#classchart = classlist_generation("a.xlsx", "b.xlsx", 1, 13)
+#print(classchart)
 main_menu()
