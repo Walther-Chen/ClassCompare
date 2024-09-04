@@ -36,8 +36,7 @@ def class_dict (medthree, medfour, weekday, start_time):
     bstor=task.teachers(bstor)    
     d=dict()
     academic_year, semester, start_date = task.semester_start_date()
-    class_date = task.generate_course_dates_with_holidays(start_date, weekday, academic_year+1911)
-    print(class_date)
+    class_date = task.generate_course_dates_with_holidays(start_date, weekday, academic_year+1911)    
     if start_time <= 12:
         timing = "A"
     else:
@@ -65,17 +64,21 @@ def classlist_generation (medthree, medfour, weekday, start_time):
     r=os.path.dirname(__file__)
     os.chdir(r) #reduce the possibility of FileNotFoundError
     d = class_dict(medthree, medfour, weekday, start_time)
+    print(d)
+    print(d.items())
     li = []
-    li.append(["授課日期", "時間", "授課教師", "授課內容", "同日醫學系上課時間與教師", "備註"])
+    li.append(["授課日期", "開始時間", "授課教師", "授課內容", "同日醫學系上課時間與教師", "國定假日"])
     for k, v in d.items():
         #combine all the classes in the same day (v) into a string described in the format of (時間,老師,年級)
         medclassess = []
-        for item in v:
-            if not item[1]:
-                medclassess.append(f"醫{item[2]}, {item[0]}節, PBL")
-            else:
-                medclassess.append(f"醫{item[2]}, {item[0]}節, {item[1]}")
-        li.append([k, "8-10", "", "", ";".join(medclassess), ""])
+        if len(v) > 1: #[None, ('1-3', '謝佩伶', '四'), ('1-3', '曾慶三', '四'), ('1-3', '吳政訓', '四'), ('1-3', '柯妙華', '四'), ('3-5', '謝佩伶', '四'), ('3-5', '曾慶三', '四'), ('3-5', '吳政訓', '四'), ('3-5', '柯妙華', '四')]
+            #for item in v except the first item
+            for item in v[1:]: #第一個項目是國定假日
+                if not item[1]:
+                    medclassess.append(f"醫{item[2]}, {item[0]}節, PBL")
+                else:
+                    medclassess.append(f"醫{item[2]}, {item[0]}節, {item[1]}")
+        li.append([k, str(start_time) + ":00", "", "", ";".join(medclassess), v[0] if v[0] is not None else ""])
     return li
 
 
@@ -114,9 +117,22 @@ def teacher_menu (filename):
         if choice.lower() != '0':
             return selected_subject, selected_teacher
         
-def main_menu(classchart):
-    print("牙醫排課系統")
-    print("目前課表：")
+def main_menu(classchart = None, weekday = None, start_time = None):
+    current_year, sementer, start_date = task.semester_start_date()
+    print("中國醫藥大學排課系統，目前時間為", current_year, "學年度", sementer, "學期", "開學日期", start_date)
+    if classchart is None:
+        print("請選擇你要排課的系所：")
+        # Display the list of departments read from classlist.json
+        with open("classlist.json", 'r', encoding="utf-8") as json_file:
+            class_dict = json.load(json_file)
+        # Transform class_dict into a list of departments with index numbers
+        li = []
+        for index, department in enumerate(class_dict, start=1):
+            li.append([index, department])
+        print(li)
+
+            
+
     util.print_chungyi(classchart)
     choice = input("請用序號選擇你要排哪一堂課，輸入q離開並存檔")
 
@@ -144,8 +160,8 @@ def main_menu(classchart):
 # Start the program
 r=os.path.dirname(__file__)
 os.chdir(r)
-print(class_dict("a.xlsx", "b.xlsx", 1, 13))
-"""
-classchart = denlist_generation("a.xlsx", "b.xlsx")
-main_menu(classchart)
-"""
+#print(class_dict("a.xlsx", "b.xlsx", 1, 13))
+
+classchart = classlist_generation("a.xlsx", "b.xlsx", 1, 13)
+print(classchart)
+main_menu()
