@@ -1,0 +1,20 @@
+[
+    {
+        "classname": "中乙病理正課",
+        "weekday": 0,
+        "starttime": 15,
+        "endtime": 17
+    },
+    {
+        "classname": "牙醫病理實驗",
+        "weekday": 1,
+        "starttime": 8,
+        "endtime": 12
+    },
+    {
+        "classname": "牙醫病理正課",
+        "weekday": 4,
+        "starttime": 9,
+        "endtime": 12
+    }
+]
