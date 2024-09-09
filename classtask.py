@@ -133,8 +133,8 @@ def generate_course_dates_with_holidays(start_date: datetime.date, weekday: int,
     :return: 包含十八個課程日期的列表，每個元素為 (datetime.date, 假日名稱) 或 (datetime.date, None)。
     """
     course_dates = []
-    print(year)
-    taiwan_holidays = holidays.TW(years=year)+holidays.TW(years=year+1)
+    #print(year)
+    taiwan_holidays = holidays.TW(years=year,language='zh_TW')+holidays.TW(years=year+1)
     
     # 計算第一周的第一個上課日
     first_class_date = start_date + datetime.timedelta(days=(weekday - start_date.weekday() + 7) % 7)
@@ -144,6 +144,7 @@ def generate_course_dates_with_holidays(start_date: datetime.date, weekday: int,
         course_date = first_class_date + datetime.timedelta(weeks=week)
         holiday_name = taiwan_holidays.get(course_date)
         course_dates.append((course_date, holiday_name))
+    
     
     return course_dates
 

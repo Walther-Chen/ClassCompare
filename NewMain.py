@@ -11,6 +11,7 @@ import classtask as task # Import the task module
 import openpyxl
 import os
 import datetime
+from sys import exit
 
 def datestring_to_datetime(datestring):
     """
@@ -64,8 +65,8 @@ def classlist_generation (medthree, medfour, weekday, start_time):
     r=os.path.dirname(__file__)
     os.chdir(r) #reduce the possibility of FileNotFoundError
     d = class_dict(medthree, medfour, weekday, start_time)
-    print(d)
-    print(d.items())
+    #print(d)
+    #print(d.items())
     li = []
     li.append(["授課日期", "開始時間", "授課教師", "授課內容", "同日醫學系上課時間與教師", "國定假日"])
     for k, v in d.items():
@@ -118,7 +119,6 @@ def teacher_menu (filename):
             return selected_subject, selected_teacher
         
 def main_menu(classchart = None, weekday = None, start_time = None, classname = None):
-    print(weekday, start_time, classname)
     current_year, sementer, start_date = task.semester_start_date()
     print("中國醫藥大學排課系統，目前時間為", current_year, "學年度", sementer, "學期", "開學日期", start_date)
     if classchart is None:
@@ -131,7 +131,7 @@ def main_menu(classchart = None, weekday = None, start_time = None, classname = 
         choice = input("請用序號選擇你要排哪一個系所，輸入q離開: ")
         if choice == "q":
             print("Exiting the program...")
-            exit()
+            exit(0)
         elif choice.isdigit():
             choice = int(choice)
             if choice > 0 and choice <= len(course_list):
@@ -153,7 +153,7 @@ def main_menu(classchart = None, weekday = None, start_time = None, classname = 
             ws.append(row)
         wb.save(outputfilename)
         print("課表已經存到", outputfilename)
-        exit()
+        exit(0)
 
     elif choice.isdigit():
         choice = int(choice)
