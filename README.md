@@ -7,7 +7,7 @@
 - [簡介](#簡介)
 - [安裝](#安裝)
 - [使用方法](#使用方法)
-- [團隊成員](#團隊成員)
+- [貢獻](#貢獻)
 - [許可證](#許可證)
  
 
@@ -22,12 +22,20 @@
 - holidays
 - requests
 - pdfplumber
+- selenium
+- bs4
+- Chrome Driver(需在google chrome lab的網頁下載與電腦上Chrome相同的版本，https://googlechromelabs.github.io/chrome-for-testing/#stable)
 
 請確保您已經安裝了這些依賴項，以便順利使用`ClassCompare`程式。
 
 ## 簡介
 
-`ClassCompare`是一個衝堂處理與排課的Python程式，可以讓您比較課程。`classmenu.py`為主要模組，目前可以進行中乙排課。`classcompare.py`單獨運行時可以輸出中乙與醫學系同時上課的日期(若欲運行此功能需將第102行程式碼從註解形式改回程式形式)。而運行`DenMain.py`模組時可進行牙醫排課。
+`ClassCompare`是一個衝堂處理與排課的Python程式，可以讓您比較課程。
+1. `NewMain.py`為主要模組，目前可以進行中乙排課、牙醫排課以及牙醫實驗排課。
+2. `classcompare.py`單獨運行時可以輸出中乙與醫學系同時上課的日期(若欲運行此功能需將第102行程式碼從註解形式改回程式形式)。
+3. 單獨運行`DenMain.py`模組時可進行牙醫排課。
+4. 單獨運行`classmenu.py`模組可進行中乙排課。
+5. 運行`add_new_class_to_courselist.py`模組可自動查詢某堂課的上課時間，並將該堂課的詳細資訊寫入`courselist.json`中，方便排課。
 
 ## 安裝
 
@@ -36,7 +44,7 @@
 安裝完Python後，您可以使用以下命令將此repository下載到本機：
 
 ```
-git clone https://github.com/kblab2024/ClassCompare.git
+git clone https://github.com/Walther-Chen/ClassCompare.git
 ```
 
 ## 使用方法
