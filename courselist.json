@@ -16,5 +16,11 @@
         "weekday": 4,
         "starttime": 9,
         "endtime": 12
+    },
+    {
+        "classname": "大學部共同整合課程4年級法醫學(雙週)",
+        "weekday": 5,
+        "starttime": 13,
+        "endtime": 15
     }
 ]
