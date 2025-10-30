@@ -61,7 +61,7 @@ git clone https://github.com/Walther-Chen/ClassCompare.git
 
 ## 貢獻
 
-- [WaltherChen](https://github.com/WalterChen)
+- [WaltherChen](https://github.com/Walther-Chen)
 - [kblab2024](https://github.com/kblab2024)
 
 ## 許可證
